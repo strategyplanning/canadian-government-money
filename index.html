@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Where Does Your Money Go? ð¨ð¦ Canadian Government Budgets</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<title>How Canada Spends Your Money! 🇨🇦</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
     --red: #D52B1E;
     --navy: #1B2A4A;
     --white: #FFFFFF;
-    --light-gray: #F4F5F7;
-    --mid-gray: #E2E4E8;
+    --light-gray: #F5F6FA;
+    --mid-gray: #E8EAF0;
     --text: #2C3E50;
-    --card-shadow: 0 4px 16px rgba(27,42,74,0.10);
+    --shadow: 0 4px 20px rgba(27,42,74,0.10);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -23,9 +23,9 @@
     line-height: 1.6;
   }
 
-  /* ââ HEADER ââ */
+  /* HEADER */
   header {
-    background: linear-gradient(135deg, var(--navy) 0%, #2A3F6A 100%);
+    background: linear-gradient(135deg, var(--navy) 0%, #2a3f6b 100%);
     color: var(--white);
     text-align: center;
     padding: 2.5rem 1rem 2rem;
@@ -34,515 +34,740 @@
   }
   header::before {
     content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 5px;
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
     background: var(--red);
   }
-  header h1 { font-size: 1.8rem; margin-bottom: 0.3rem; }
-  header p { font-size: 1rem; opacity: 0.85; max-width: 600px; margin: 0 auto; }
-  .maple { display: inline-block; animation: spin 4s ease-in-out infinite; }
-  @keyframes spin { 0%,100%{transform:rotate(0)} 50%{transform:rotate(15deg)} }
+  header h1 {
+    font-size: clamp(1.6rem, 5vw, 2.8rem);
+    margin-bottom: 0.3rem;
+    font-weight: 800;
+  }
+  header p {
+    font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+    opacity: 0.85;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .maple-leaf { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
 
-  /* ââ INTRO SECTION ââ */
-  .intro {
-    max-width: 900px; margin: 2rem auto; padding: 0 1rem;
+  /* INTRO */
+  .intro-section {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
   }
   .intro-card {
-    background: var(--white); border-radius: 16px; padding: 1.8rem;
-    box-shadow: var(--card-shadow);
+    background: var(--white);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
   }
   .intro-card h2 { color: var(--navy); margin-bottom: 1rem; font-size: 1.4rem; }
-  .intro-card p { margin-bottom: 1rem; }
+  .intro-card p { margin-bottom: 1rem; font-size: 1.02rem; }
+  .gov-levels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .gov-level {
+    background: var(--light-gray);
+    border-radius: 12px;
+    padding: 1.2rem;
+    text-align: center;
+    border-top: 4px solid var(--red);
+    transition: transform 0.2s;
+  }
+  .gov-level:hover { transform: translateY(-3px); }
+  .gov-level .emoji { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
+  .gov-level h3 { color: var(--navy); font-size: 1.1rem; margin-bottom: 0.4rem; }
+  .gov-level p { font-size: 0.9rem; color: #555; }
 
-  /* ââ FLOW DIAGRAM ââ */
-  .flow {
-    display: flex; flex-direction: column; align-items: center;
-    gap: 0; margin: 1.5rem 0;
+  /* MONEY FLOW */
+  .flow-section {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
   }
-  .flow-box {
-    border-radius: 12px; padding: 0.8rem 1.4rem; font-weight: 700;
-    text-align: center; color: var(--white); width: 220px; font-size: 0.95rem;
-  }
-  .flow-box.federal { background: var(--red); }
-  .flow-box.provincial { background: #C0392B; }
-  .flow-box.municipal { background: var(--navy); }
-  .flow-arrow {
-    font-size: 1.4rem; color: var(--navy); line-height: 1;
-    padding: 0.2rem 0;
-  }
-  .flow-label {
-    font-size: 0.75rem; color: #666; text-align: center; margin-top: -2px;
-  }
-
-  /* ââ TABS ââ */
-  .tabs-wrapper {
-    max-width: 900px; margin: 1.5rem auto 0; padding: 0 1rem;
-  }
-  .tab-bar {
-    display: flex; gap: 0.5rem; margin-bottom: 0;
-  }
-  .tab-btn {
-    flex: 1; padding: 0.8rem 0.5rem; border: none; border-radius: 12px 12px 0 0;
-    font-size: 0.9rem; font-weight: 700; cursor: pointer;
-    background: var(--mid-gray); color: #666; transition: all 0.25s;
-  }
-  .tab-btn.active { background: var(--white); color: var(--navy); box-shadow: var(--card-shadow); }
-  .tab-btn:hover { color: var(--navy); }
-
-  .tab-content {
-    background: var(--white); border-radius: 0 0 16px 16px;
-    box-shadow: var(--card-shadow); padding: 1.5rem;
-    display: none;
-  }
-  .tab-content.active { display: block; }
-
-  .tab-content h2 { color: var(--navy); font-size: 1.3rem; margin-bottom: 0.3rem; }
-  .tab-content .subtitle { color: #888; font-size: 0.9rem; margin-bottom: 1.2rem; }
-
-  /* ââ CHART GRID ââ */
-  .chart-grid {
-    display: grid; grid-template-columns: 1fr; gap: 1.5rem;
-  }
-  @media (min-width: 650px) {
-    .chart-grid { grid-template-columns: 1fr 1fr; }
-  }
-  .chart-card {
-    background: var(--light-gray); border-radius: 12px; padding: 1rem;
+  .flow-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
     text-align: center;
   }
-  .chart-card h3 { color: var(--navy); font-size: 1rem; margin-bottom: 0.5rem; }
-  .chart-card canvas { max-height: 280px; }
+  .flow-card h2 { color: var(--navy); margin-bottom: 1rem; }
+  .flow-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1.5rem 0;
+  }
+  .flow-box {
+    background: var(--navy);
+    color: var(--white);
+    padding: 0.9rem 1.8rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    min-width: 220px;
+    position: relative;
+  }
+  .flow-box.federal { background: var(--red); }
+  .flow-box.provincial { background: var(--navy); }
+  .flow-box.municipal { background: #2a6b3f; }
+  .flow-arrow {
+    font-size: 1.4rem;
+    color: var(--navy);
+    line-height: 1;
+  }
+  .flow-label {
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+  }
+  .flow-note {
+    font-size: 0.92rem;
+    color: #555;
+    max-width: 600px;
+    margin: 0.5rem auto 0;
+  }
 
-  /* ââ DOLLAR BREAKDOWN ââ */
-  .dollar-section { margin-top: 1.5rem; }
-  .dollar-section h3 { color: var(--navy); font-size: 1.1rem; margin-bottom: 0.8rem; }
-  .dollar-bar-container { margin-bottom: 0.5rem; }
-  .dollar-bar-label {
-    display: flex; justify-content: space-between; font-size: 0.85rem;
-    margin-bottom: 3px;
+  /* TABS */
+  .tabs-container {
+    max-width: 960px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  .tab-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    flex: 1;
+    min-width: 140px;
+    padding: 0.9rem 1rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+    background: var(--mid-gray);
+    color: var(--navy);
+  }
+  .tab-btn:hover { background: #d0d4e0; }
+  .tab-btn.active {
+    background: var(--red);
+    color: var(--white);
+    box-shadow: 0 4px 12px rgba(213,43,30,0.3);
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeUp 0.4s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* BUDGET PANELS */
+  .budget-panel {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+  }
+  .budget-panel h2 {
+    color: var(--navy);
+    margin-bottom: 0.3rem;
+    font-size: 1.5rem;
+  }
+  .budget-subtitle {
+    color: #888;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  @media (max-width: 700px) {
+    .chart-grid { grid-template-columns: 1fr; }
+  }
+  .chart-box { text-align: center; }
+  .chart-box h3 {
+    color: var(--navy);
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+  }
+  .chart-box canvas { max-width: 100%; }
+
+  /* DOLLAR BREAKDOWN */
+  .dollar-section h3 {
+    color: var(--navy);
+    margin-bottom: 1rem;
+    font-size: 1.15rem;
+    text-align: center;
+  }
+  .dollar-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .dollar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .dollar-label {
+    width: 160px;
+    font-size: 0.88rem;
+    text-align: right;
+    flex-shrink: 0;
+    color: #444;
+  }
+  .dollar-bar-wrap {
+    flex: 1;
+    background: var(--mid-gray);
+    border-radius: 8px;
+    height: 26px;
+    overflow: hidden;
+    position: relative;
   }
   .dollar-bar {
-    height: 22px; border-radius: 11px; background: var(--mid-gray); overflow: hidden;
+    height: 100%;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: white;
+    transition: width 1.2s ease;
+    width: 0;
   }
-  .dollar-bar-fill {
-    height: 100%; border-radius: 11px; transition: width 1s ease;
-    display: flex; align-items: center; justify-content: flex-end;
-    padding-right: 8px; color: white; font-size: 0.7rem; font-weight: 700;
+  @media (max-width: 500px) {
+    .dollar-label { width: 100px; font-size: 0.8rem; }
   }
 
-  /* ââ FUN FACT ââ */
+  /* FUN FACT */
   .fun-fact {
-    margin-top: 1.5rem; background: #FFF8E1; border-left: 4px solid #FFC107;
-    border-radius: 0 8px 8px 0; padding: 1rem;
-    font-size: 0.9rem;
+    background: linear-gradient(135deg, #FFF9E6, #FFF3CC);
+    border-left: 4px solid #F5A623;
+    border-radius: 0 12px 12px 0;
+    padding: 1rem 1.2rem;
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
   }
   .fun-fact strong { color: var(--navy); }
 
-  /* ââ COUNTER ââ */
-  .big-number {
-    font-size: 2.2rem; font-weight: 800; color: var(--red);
-    font-variant-numeric: tabular-nums;
+  /* COUNTER */
+  .counter-row {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin: 1rem 0 1.5rem;
+  }
+  .counter-item { text-align: center; }
+  .counter-num {
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    font-weight: 800;
+    color: var(--red);
+  }
+  .counter-label {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 0.2rem;
   }
 
-  /* ââ QUIZ ââ */
-  .quiz-wrapper {
-    max-width: 900px; margin: 2rem auto; padding: 0 1rem 3rem;
+  /* QUIZ */
+  .quiz-section {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem 3rem;
   }
   .quiz-card {
-    background: var(--white); border-radius: 16px; padding: 1.8rem;
-    box-shadow: var(--card-shadow);
+    background: var(--white);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
   }
-  .quiz-card h2 { color: var(--navy); margin-bottom: 1rem; }
+  .quiz-card h2 {
+    color: var(--navy);
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
   .quiz-q {
-    margin-bottom: 1.2rem; padding-bottom: 1.2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.2rem;
     border-bottom: 1px solid var(--mid-gray);
   }
-  .quiz-q:last-of-type { border-bottom: none; }
-  .quiz-q p { font-weight: 600; margin-bottom: 0.5rem; font-size: 0.95rem; }
-  .quiz-options { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .quiz-q:last-child { border-bottom: none; margin-bottom: 0; }
+  .quiz-q p {
+    font-weight: 700;
+    margin-bottom: 0.7rem;
+    color: var(--navy);
+    font-size: 1rem;
+  }
+  .quiz-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
   .quiz-opt {
-    padding: 0.5rem 1rem; border-radius: 8px; border: 2px solid var(--mid-gray);
-    background: var(--white); cursor: pointer; font-size: 0.85rem;
+    padding: 0.5rem 1.1rem;
+    border: 2px solid var(--mid-gray);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    background: var(--white);
     transition: all 0.2s;
+    font-weight: 500;
   }
-  .quiz-opt:hover { border-color: var(--navy); }
-  .quiz-opt.correct { background: #C8E6C9; border-color: #388E3C; color: #2E7D32; }
-  .quiz-opt.wrong { background: #FFCDD2; border-color: #D32F2F; color: #C62828; }
-  .quiz-feedback { margin-top: 0.4rem; font-size: 0.85rem; min-height: 1.2em; }
+  .quiz-opt:hover { border-color: var(--navy); background: #f0f2f8; }
+  .quiz-opt.correct {
+    background: #E8F5E9;
+    border-color: #43A047;
+    color: #2E7D32;
+  }
+  .quiz-opt.wrong {
+    background: #FFEBEE;
+    border-color: #E53935;
+    color: #C62828;
+  }
+  .quiz-opt.disabled { pointer-events: none; opacity: 0.7; }
+  .quiz-feedback {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    min-height: 1.4em;
+  }
   .quiz-score {
-    text-align: center; margin-top: 1rem; padding: 1rem;
-    background: var(--light-gray); border-radius: 12px;
-    font-size: 1.1rem; font-weight: 700; color: var(--navy);
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--light-gray);
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--navy);
+    display: none;
   }
 
-  /* ââ FOOTER ââ */
+  /* FOOTER */
   footer {
-    text-align: center; padding: 2rem 1rem; color: #999; font-size: 0.8rem;
+    text-align: center;
+    padding: 2rem 1rem;
+    background: var(--navy);
+    color: rgba(255,255,255,0.6);
+    font-size: 0.85rem;
   }
-
-  /* ââ ANIMATIONS ââ */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .animate-in { animation: fadeUp 0.5s ease forwards; }
+  footer a { color: rgba(255,255,255,0.8); }
 </style>
 </head>
 <body>
 
-<!-- âââââââââââ HEADER âââââââââââ -->
+<!-- HEADER -->
 <header>
-  <h1><span class="maple">ð</span> Where Does Your Money Go?</h1>
-  <p>A kid-friendly guide to how Canadian governments collect and spend money</p>
+  <span class="maple-leaf">🍁</span>
+  <h1>How Canada Spends Your Money!</h1>
+  <p>An interactive guide to government budgets  - from your neighbourhood to the whole country</p>
 </header>
 
-<!-- âââââââââââ INTRO âââââââââââ -->
-<section class="intro">
-  <div class="intro-card animate-in">
-    <h2>ðï¸ Three Levels of Government</h2>
-    <p>Canada has <strong>three levels of government</strong>, and each one is in charge of different things. Think of it like a team â everyone has their own job!</p>
-    <p>ð <strong>Federal (Canada-wide)</strong> â Runs the military, borders, employment insurance, and sends money to provinces.<br>
-    ðï¸ <strong>Provincial (Ontario)</strong> â Pays for hospitals, schools, highways, and social services.<br>
-    ðï¸ <strong>Municipal (Halton Region)</strong> â Handles local roads, water, garbage, police, and parks.</p>
-    <p>Money flows <em>down</em> from the federal government to provinces, and from provinces to cities. Here's how:</p>
-
-    <div class="flow">
-      <div class="flow-box federal">ð Federal Government</div>
-      <div class="flow-arrow">â¬ï¸</div>
-      <div class="flow-label">Transfers ~$36B to Ontario</div>
-      <div class="flow-box provincial">ðï¸ Ontario (Provincial)</div>
-      <div class="flow-arrow">â¬ï¸</div>
-      <div class="flow-label">Grants to municipalities</div>
-      <div class="flow-box municipal">ðï¸ Halton Region (Municipal)</div>
+<!-- INTRO -->
+<section class="intro-section">
+  <div class="intro-card">
+    <h2>🏛️ Three Levels of Government</h2>
+    <p>Did you know Canada has <strong>three levels of government</strong>, and each one collects money (called <strong>revenue</strong>) and spends it on different things? Taxes are the biggest way governments collect money  - and they use it to pay for schools, hospitals, roads, police, and much more!</p>
+    <p>Let's explore how each level works, where the money comes from, and where it all goes. Ready? Let's dive in! 🚀</p>
+    <div class="gov-levels">
+      <div class="gov-level">
+        <span class="emoji">🏘️</span>
+        <h3>Municipal / Regional</h3>
+        <p>Your city or region  - handles local stuff like water, roads, garbage, and police.</p>
+      </div>
+      <div class="gov-level">
+        <span class="emoji">🏫</span>
+        <h3>Provincial</h3>
+        <p>Ontario's government  - pays for schools, hospitals, and highways.</p>
+      </div>
+      <div class="gov-level">
+        <span class="emoji">🇨🇦</span>
+        <h3>Federal</h3>
+        <p>The whole country  - handles defence, EI, Indigenous services, and transfers to provinces.</p>
+      </div>
     </div>
-    <p style="text-align:center;font-size:0.85rem;color:#888;">Each level also collects its <em>own</em> taxes â the arrows show extra help they send down.</p>
   </div>
 </section>
 
-<!-- âââââââââââ TABS âââââââââââ -->
-<div class="tabs-wrapper">
-  <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('municipal')">ðï¸ Halton</button>
-    <button class="tab-btn" onclick="switchTab('provincial')">ðï¸ Ontario</button>
-    <button class="tab-btn" onclick="switchTab('federal')">ð Canada</button>
+<!-- MONEY FLOW -->
+<section class="flow-section">
+  <div class="flow-card">
+    <h2>💸 How Money Flows Between Governments</h2>
+    <p style="color:#555; margin-bottom:1rem;">Money doesn't just stay in one place  - the federal government sends billions to provinces, and provinces send money to municipalities too!</p>
+    <div class="flow-diagram">
+      <div class="flow-box federal">🇨🇦 Federal Government<br><small>Collects ~$498 Billion</small></div>
+      <div class="flow-arrow">⬇️</div>
+      <div class="flow-label">$36.3 Billion in Federal Transfers</div>
+      <div class="flow-box provincial">🏫 Ontario Provincial<br><small>Revenue ~$213 Billion</small></div>
+      <div class="flow-arrow">⬇️</div>
+      <div class="flow-label">Grants &amp; Subsidies</div>
+      <div class="flow-box municipal">🏘️ Halton Region<br><small>Budget ~$1.2 Billion</small></div>
+    </div>
+    <p class="flow-note">About 12% of Halton Region's revenue comes from grants  - much of that flows down from the provincial and federal governments. It's teamwork! 🤝</p>
+  </div>
+</section>
+
+<!-- TABS -->
+<section class="tabs-container">
+  <div class="tab-buttons">
+    <button class="tab-btn active" onclick="switchTab('halton')">🏘️ Halton Region</button>
+    <button class="tab-btn" onclick="switchTab('ontario')">🏫 Ontario</button>
+    <button class="tab-btn" onclick="switchTab('canada')">🇨🇦 Canada</button>
   </div>
 
-  <!-- ââ MUNICIPAL TAB ââ -->
-  <div id="tab-municipal" class="tab-content active animate-in">
-    <h2>ðï¸ Halton Region â Your Neighbourhood</h2>
-    <p class="subtitle">Budget: ~<span class="big-number" data-target="1200000000" data-prefix="$">$0</span></p>
-
-    <div class="chart-grid">
-      <div class="chart-card">
-        <h3>ð° Where the Money Comes From</h3>
-        <canvas id="halton-revenue"></canvas>
+  <!-- HALTON TAB -->
+  <div id="tab-halton" class="tab-content active">
+    <div class="budget-panel">
+      <h2>🏘️ Halton Region Budget</h2>
+      <p class="budget-subtitle">Serving Burlington, Oakville, Milton &amp; Halton Hills</p>
+      <div class="counter-row">
+        <div class="counter-item"><div class="counter-num" data-target="1200000000" data-prefix="$" data-suffix="">$0</div><div class="counter-label">Total Budget</div></div>
+        <div class="counter-item"><div class="counter-num" data-target="620000" data-prefix="" data-suffix=" people">0 people</div><div class="counter-label">Population Served</div></div>
       </div>
-      <div class="chart-card">
-        <h3>ðï¸ Where the Money Goes</h3>
-        <canvas id="halton-spending"></canvas>
+      <div class="chart-grid">
+        <div class="chart-box"><h3>💰 Where the Money Comes From</h3><canvas id="haltonRevChart"></canvas></div>
+        <div class="chart-box"><h3>🏗️ Where the Money Goes</h3><canvas id="haltonSpendChart"></canvas></div>
       </div>
-    </div>
-
-    <div class="dollar-section">
-      <h3>ðª Where Does $1 of Halton Spending Go?</h3>
-      <div id="halton-dollar"></div>
-    </div>
-
-    <div class="fun-fact">
-      <strong>ð¤ Fun Fact:</strong> Halton Region serves 620,000+ people across Burlington, Oakville, Milton, and Halton Hills. That means the region spends about $1,900 per person!
-    </div>
-  </div>
-
-  <!-- ââ PROVINCIAL TAB ââ -->
-  <div id="tab-provincial" class="tab-content">
-    <h2>ðï¸ Ontario â Your Province</h2>
-    <p class="subtitle">Revenue: ~<span class="big-number" data-target="213000000000" data-prefix="$">$0</span></p>
-
-    <div class="chart-grid">
-      <div class="chart-card">
-        <h3>ð° Where the Money Comes From</h3>
-        <canvas id="ontario-revenue"></canvas>
+      <div class="dollar-section">
+        <h3>🪙 Where Does Your $1 of Property Tax Go?</h3>
+        <div class="dollar-bars" id="haltonDollar"></div>
       </div>
-      <div class="chart-card">
-        <h3>ðï¸ Where the Money Goes</h3>
-        <canvas id="ontario-spending"></canvas>
-      </div>
-    </div>
-
-    <div class="dollar-section">
-      <h3>ðª Where Does $1 of Ontario Spending Go?</h3>
-      <div id="ontario-dollar"></div>
-    </div>
-
-    <div class="fun-fact">
-      <strong>ð¤ Fun Fact:</strong> Ontario spends $86 billion on health care â about $5,500 per person. Your OHIP card is your ticket to free doctor visits and hospital care!
+      <div class="fun-fact">💡 <strong>Fun Fact:</strong> Halton Region serves 620,000+ people across Burlington, Oakville, Milton, and Halton Hills.</div>
     </div>
   </div>
 
-  <!-- ââ FEDERAL TAB ââ -->
-  <div id="tab-federal" class="tab-content">
-    <h2>ð Canada â The Whole Country</h2>
-    <p class="subtitle">Revenue: ~<span class="big-number" data-target="498000000000" data-prefix="$">$0</span> &nbsp;|&nbsp; Spending: ~<span class="big-number" data-target="538000000000" data-prefix="$">$0</span></p>
-
-    <div class="chart-grid">
-      <div class="chart-card">
-        <h3>ð° Where the Money Comes From</h3>
-        <canvas id="canada-revenue"></canvas>
+  <!-- ONTARIO TAB -->
+  <div id="tab-ontario" class="tab-content">
+    <div class="budget-panel">
+      <h2>🏫 Ontario Provincial Budget</h2>
+      <p class="budget-subtitle">Canada's most populous province</p>
+      <div class="counter-row">
+        <div class="counter-item"><div class="counter-num" data-target="213000000000" data-prefix="$" data-suffix="">$0</div><div class="counter-label">Total Revenue</div></div>
+        <div class="counter-item"><div class="counter-num" data-target="5500" data-prefix="$" data-suffix="/person">$0/person</div><div class="counter-label">Health Spending</div></div>
       </div>
-      <div class="chart-card">
-        <h3>ðï¸ Where the Money Goes</h3>
-        <canvas id="canada-spending"></canvas>
+      <div class="chart-grid">
+        <div class="chart-box"><h3>💰 Where the Money Comes From</h3><canvas id="ontarioRevChart"></canvas></div>
+        <div class="chart-box"><h3>🏗️ Where the Money Goes</h3><canvas id="ontarioSpendChart"></canvas></div>
       </div>
-    </div>
-
-    <div class="dollar-section">
-      <h3>ðª Where Does $1 of Federal Spending Go?</h3>
-      <div id="canada-dollar"></div>
-    </div>
-
-    <div class="fun-fact">
-      <strong>ð¤ Fun Fact:</strong> The federal government collects ~$498 billion but spends ~$538 billion. The $40 billion gap is the <em>deficit</em> â money the government borrows. Imagine spending your whole allowance and then borrowing from your parents!
+      <div class="dollar-section">
+        <h3>🪙 Where Does Your $1 of Ontario Tax Go?</h3>
+        <div class="dollar-bars" id="ontarioDollar"></div>
+      </div>
+      <div class="fun-fact">💡 <strong>Fun Fact:</strong> Ontario spends $86 billion on health care  - about $5,500 per person!</div>
     </div>
   </div>
-</div>
 
-<!-- âââââââââââ QUIZ âââââââââââ -->
-<section class="quiz-wrapper">
-  <div class="quiz-card animate-in">
-    <h2>ð§  Budget Brain Quiz!</h2>
-    <p style="margin-bottom:1rem;color:#888;">Test what you've learned â click the right answer!</p>
-    <div id="quiz-container"></div>
-    <div id="quiz-score" class="quiz-score" style="display:none;"></div>
+  <!-- CANADA TAB -->
+  <div id="tab-canada" class="tab-content">
+    <div class="budget-panel">
+      <h2>🇨🇦 Federal Budget  - All of Canada</h2>
+      <p class="budget-subtitle">From coast to coast to coast</p>
+      <div class="counter-row">
+        <div class="counter-item"><div class="counter-num" data-target="498000000000" data-prefix="$" data-suffix="">$0</div><div class="counter-label">Total Revenue</div></div>
+        <div class="counter-item"><div class="counter-num" data-target="538000000000" data-prefix="$" data-suffix="">$0</div><div class="counter-label">Total Spending</div></div>
+      </div>
+      <div class="chart-grid">
+        <div class="chart-box"><h3>💰 Where the Money Comes From</h3><canvas id="canadaRevChart"></canvas></div>
+        <div class="chart-box"><h3>🏗️ Where the Money Goes</h3><canvas id="canadaSpendChart"></canvas></div>
+      </div>
+      <div class="dollar-section">
+        <h3>🪙 Where Does Your $1 of Federal Tax Go?</h3>
+        <div class="dollar-bars" id="canadaDollar"></div>
+      </div>
+      <div class="fun-fact">💡 <strong>Fun Fact:</strong> The federal government collects ~$498 billion  - nearly half from personal income tax.</div>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="quiz-section">
+  <div class="quiz-card">
+    <h2>🧠 Test Your Knowledge! (5 Questions)</h2>
+    <div id="quizArea"></div>
+    <div class="quiz-score" id="quizScore"></div>
   </div>
 </section>
 
 <footer>
-  Made with ð for curious Canadians &nbsp;|&nbsp; Data is approximate and for educational purposes
+  <p>Built with 🍁 for curious young Canadians &mdash; 2026</p>
 </footer>
 
-<!-- âââââââââââ JAVASCRIPT âââââââââââ -->
 <script>
-// ââ TAB SWITCHING ââ
-function switchTab(name) {
+// ======= TAB SWITCHING =======
+function switchTab(id) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active', 'animate-in');
-  event.currentTarget.classList.add('active');
-  initCounters();
-  // Rebuild charts if not yet created
-  if (!chartsBuilt[name]) { buildCharts(name); chartsBuilt[name] = true; }
+  document.getElementById('tab-' + id).classList.add('active');
+  const btns = document.querySelectorAll('.tab-btn');
+  const map = { halton: 0, ontario: 1, canada: 2 };
+  btns[map[id]].classList.add('active');
+  animateDollarBars(id);
+  animateCounters();
 }
-const chartsBuilt = { municipal: false, provincial: false, federal: false };
 
-// ââ ANIMATED COUNTERS ââ
-function initCounters() {
-  document.querySelectorAll('.big-number').forEach(el => {
-    if (el.dataset.done) return;
+// ======= CHART COLORS =======
+const COLORS = {
+  rev: ['#D52B1E','#1B2A4A','#2E86AB','#F5A623','#43A047','#8E44AD','#E67E22','#3498DB','#1ABC9C'],
+  spend: ['#D52B1E','#1B2A4A','#2E86AB','#43A047','#F5A623','#8E44AD','#E67E22','#3498DB','#1ABC9C']
+};
+
+function makeDoughnut(canvasId, labels, data, colors) {
+  new Chart(document.getElementById(canvasId), {
+    type: 'doughnut',
+    data: {
+      labels: labels,
+      datasets: [{ data: data, backgroundColor: colors || COLORS.rev.slice(0, data.length), borderWidth: 2, borderColor: '#fff' }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 }, padding: 8 } },
+        tooltip: {
+          callbacks: { label: ctx => ' ' + ctx.label + ': ' + ctx.parsed + '%' }
+        }
+      },
+      cutout: '55%'
+    }
+  });
+}
+
+function makeBarH(canvasId, labels, data, colors) {
+  new Chart(document.getElementById(canvasId), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{ data: data, backgroundColor: colors || COLORS.spend.slice(0, data.length), borderRadius: 6, borderSkipped: false }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.x + '%' } }
+      },
+      scales: {
+        x: { max: 45, ticks: { callback: v => v + '%' }, grid: { color: '#eee' } },
+        y: { ticks: { font: { size: 11 } }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+// ======= HALTON =======
+makeDoughnut('haltonRevChart',
+  ['Property Tax','Water Fees','Grants','Dev Charges','Other'],
+  [48, 22, 12, 10, 8]
+);
+makeBarH('haltonSpendChart',
+  ['Water & Wastewater','Roads & Transit','Police','Social Services','Public Health','Waste Mgmt','Planning','General Gov'],
+  [25, 18, 16, 14, 8, 7, 6, 6]
+);
+
+// ======= ONTARIO =======
+makeDoughnut('ontarioRevChart',
+  ['Personal Income Tax','HST Sales Tax','Corporate Tax','Federal Transfers','Employer Health Tax','Ed Property Tax','Health Premium','Gov Business','Other'],
+  [25.8, 18.8, 13.1, 17.1, 4.2, 2.7, 2.4, 3.1, 12.8]
+);
+makeBarH('ontarioSpendChart',
+  ['Health Care','Education K-12','Post-Secondary','Social Services','Transportation','Debt Interest','Justice','Other'],
+  [38, 17, 6, 9, 5, 7, 4, 14]
+);
+
+// ======= CANADA =======
+makeDoughnut('canadaRevChart',
+  ['Personal Income Tax','Corporate Tax','GST','EI Premiums','Other Tax','Non-Tax Revenue'],
+  [47, 18, 11, 6, 7, 11]
+);
+makeBarH('canadaSpendChart',
+  ['Transfers to Persons','Transfers to Gov\'ts','Operating Expenses','Defence','Debt Charges','Other'],
+  [25, 18, 23, 8, 10, 16]
+);
+
+// ======= DOLLAR BREAKDOWN =======
+const dollarData = {
+  halton: [
+    { label: 'Water & Wastewater', pct: 25, color: '#2E86AB' },
+    { label: 'Roads & Transit', pct: 18, color: '#1B2A4A' },
+    { label: 'Police Services', pct: 16, color: '#D52B1E' },
+    { label: 'Social Services', pct: 14, color: '#43A047' },
+    { label: 'Public Health', pct: 8, color: '#F5A623' },
+    { label: 'Waste Management', pct: 7, color: '#8E44AD' },
+    { label: 'Planning', pct: 6, color: '#E67E22' },
+    { label: 'General Gov', pct: 6, color: '#3498DB' }
+  ],
+  ontario: [
+    { label: 'Health Care', pct: 38, color: '#D52B1E' },
+    { label: 'Education K-12', pct: 17, color: '#1B2A4A' },
+    { label: 'Social Services', pct: 9, color: '#43A047' },
+    { label: 'Debt Interest', pct: 7, color: '#8E44AD' },
+    { label: 'Post-Secondary', pct: 6, color: '#2E86AB' },
+    { label: 'Transportation', pct: 5, color: '#F5A623' },
+    { label: 'Justice', pct: 4, color: '#E67E22' },
+    { label: 'Other', pct: 14, color: '#3498DB' }
+  ],
+  canada: [
+    { label: 'Transfers to Persons', pct: 25, color: '#D52B1E' },
+    { label: 'Operating Expenses', pct: 23, color: '#1B2A4A' },
+    { label: 'Transfers to Gov\'ts', pct: 18, color: '#2E86AB' },
+    { label: 'Other', pct: 16, color: '#43A047' },
+    { label: 'Debt Charges', pct: 10, color: '#F5A623' },
+    { label: 'Defence', pct: 8, color: '#8E44AD' }
+  ]
+};
+
+function buildDollarBars(containerId, items) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  items.forEach(item => {
+    const cents = (item.pct / 100).toFixed(2);
+    el.innerHTML += `
+      <div class="dollar-row">
+        <div class="dollar-label">${item.label}</div>
+        <div class="dollar-bar-wrap">
+          <div class="dollar-bar" style="background:${item.color};" data-width="${item.pct}%">${cents} cents</div>
+        </div>
+      </div>`;
+  });
+}
+
+buildDollarBars('haltonDollar', dollarData.halton);
+buildDollarBars('ontarioDollar', dollarData.ontario);
+buildDollarBars('canadaDollar', dollarData.canada);
+
+function animateDollarBars(tabId) {
+  const container = document.getElementById(tabId + 'Dollar');
+  if (!container) return;
+  container.querySelectorAll('.dollar-bar').forEach(bar => {
+    bar.style.width = '0';
+    setTimeout(() => { bar.style.width = bar.dataset.width; }, 100);
+  });
+}
+// Initial animation
+setTimeout(() => animateDollarBars('halton'), 300);
+
+// ======= ANIMATED COUNTERS =======
+function animateCounters() {
+  document.querySelectorAll('.tab-content.active .counter-num').forEach(el => {
     const target = parseInt(el.dataset.target);
     const prefix = el.dataset.prefix || '';
-    const parent = el.closest('.tab-content');
-    if (!parent || !parent.classList.contains('active')) return;
-    el.dataset.done = '1';
-    animateNumber(el, 0, target, 1200, prefix);
+    const suffix = el.dataset.suffix || '';
+    let current = 0;
+    const step = Math.ceil(target / 60);
+    const interval = setInterval(() => {
+      current += step;
+      if (current >= target) { current = target; clearInterval(interval); }
+      let display;
+      if (target >= 1e9) display = '$' + (current / 1e9).toFixed(current >= target ? 1 : 0) + 'B';
+      else if (target >= 1e6) display = prefix + (current / 1e6).toFixed(0) + 'M' + suffix;
+      else if (target >= 1e3) display = prefix + current.toLocaleString() + suffix;
+      else display = prefix + current.toLocaleString() + suffix;
+      el.textContent = display;
+    }, 25);
   });
 }
-function animateNumber(el, start, end, duration, prefix) {
-  const startTime = performance.now();
-  function update(now) {
-    const elapsed = now - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const current = Math.floor(start + (end - start) * eased);
-    el.textContent = prefix + current.toLocaleString('en-CA');
-    if (progress < 1) requestAnimationFrame(update);
+setTimeout(animateCounters, 500);
+
+// ======= QUIZ =======
+const quizQuestions = [
+  {
+    q: '1. Which level of government pays for your school?',
+    opts: ['Municipal', 'Provincial (Ontario)', 'Federal'],
+    correct: 1,
+    explain: 'Ontario\'s provincial government funds K-12 education  - that\'s 17% of their budget! 📚'
+  },
+  {
+    q: '2. What is the biggest source of federal revenue?',
+    opts: ['GST', 'Corporate Tax', 'Personal Income Tax', 'EI Premiums'],
+    correct: 2,
+    explain: 'Personal income tax makes up 47% of federal revenue  - nearly half of all the money Ottawa collects! 💰'
+  },
+  {
+    q: '3. Who runs the police in Halton Region?',
+    opts: ['Federal (RCMP)', 'Provincial (OPP)', 'Municipal / Regional'],
+    correct: 2,
+    explain: 'Halton Regional Police is funded by the region  - 16% of the budget goes to policing! 🚔'
+  },
+  {
+    q: '4. What does OHIP stand for?',
+    opts: ['Ontario Housing Insurance Plan', 'Ontario Health Insurance Plan', 'Ontario Highway Improvement Program'],
+    correct: 1,
+    explain: 'OHIP = Ontario Health Insurance Plan  - it\'s run by the provincial government and covers doctor visits and hospital care! 🏥'
+  },
+  {
+    q: '5. Where does GST money go?',
+    opts: ['Your city', 'Ontario provincial government', 'Federal government'],
+    correct: 2,
+    explain: 'The GST (Goods and Services Tax) goes to the federal government  - it makes up 11% of their revenue! 🧾'
   }
-  requestAnimationFrame(update);
-}
-
-// ââ DOLLAR BAR BUILDER ââ
-function buildDollarBars(containerId, items, color) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = '';
-  items.forEach(item => {
-    const cents = Math.round(item.pct);
-    const div = document.createElement('div');
-    div.className = 'dollar-bar-container';
-    div.innerHTML = `
-      <div class="dollar-bar-label">
-        <span>${item.label}</span>
-        <span>${cents}Â¢</span>
-      </div>
-      <div class="dollar-bar">
-        <div class="dollar-bar-fill" style="width:0%;background:${color};">${cents}Â¢</div>
-      </div>`;
-    container.appendChild(div);
-    setTimeout(() => {
-      div.querySelector('.dollar-bar-fill').style.width = cents + '%';
-    }, 100);
-  });
-}
-
-// ââ CHART COLORS ââ
-const COLORS = [
-  '#D52B1E','#1B2A4A','#2196F3','#4CAF50','#FF9800','#9C27B0',
-  '#00BCD4','#FF5722','#607D8B','#E91E63','#8BC34A','#3F51B5'
 ];
 
-// ââ BUILD CHARTS ââ
-function buildCharts(level) {
-  if (level === 'municipal') {
-    new Chart(document.getElementById('halton-revenue'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Property Tax','Water Fees','Grants','Dev Charges','Other'],
-        datasets: [{ data: [48,22,12,10,8], backgroundColor: COLORS.slice(0,5), borderWidth: 2, borderColor: '#fff' }]
-      },
-      options: chartOpts('Revenue Sources')
-    });
-    new Chart(document.getElementById('halton-spending'), {
-      type: 'bar',
-      data: {
-        labels: ['Water','Roads/Transit','Police','Social Svc','Health','Waste','Planning','General'],
-        datasets: [{ label: '% of Budget', data: [25,18,16,14,8,7,6,6], backgroundColor: COLORS.slice(0,8), borderRadius: 6 }]
-      },
-      options: barOpts('Spending Breakdown')
-    });
-    buildDollarBars('halton-dollar', [
-      {label:'ð§ Water & Pipes', pct:25},{label:'ð Roads & Transit', pct:18},
-      {label:'ð® Police', pct:16},{label:'ð¤ Social Services', pct:14},
-      {label:'ð¥ Public Health', pct:8},{label:'ðï¸ Waste', pct:7},
-      {label:'ð Planning', pct:6},{label:'ð¢ General', pct:6}
-    ], '#1B2A4A');
-  }
-  if (level === 'provincial') {
-    new Chart(document.getElementById('ontario-revenue'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Personal Income Tax','HST (Sales Tax)','Corporate Tax','Federal Transfers','Employer Health Tax','Education Property Tax','Health Premium','Gov Business','Other'],
-        datasets: [{ data: [25.8,18.8,13.1,17.1,4.2,2.7,2.4,3.1,12.8], backgroundColor: COLORS.slice(0,9), borderWidth: 2, borderColor: '#fff' }]
-      },
-      options: chartOpts('Revenue Sources')
-    });
-    new Chart(document.getElementById('ontario-spending'), {
-      type: 'bar',
-      data: {
-        labels: ['Health','K-12 Edu','Post-Sec','Social Svc','Transport','Debt Interest','Justice','Other'],
-        datasets: [{ label: '% of Budget', data: [38,17,6,9,5,7,4,14], backgroundColor: COLORS.slice(0,8), borderRadius: 6 }]
-      },
-      options: barOpts('Spending Breakdown')
-    });
-    buildDollarBars('ontario-dollar', [
-      {label:'ð¥ Health Care', pct:38},{label:'ð Schools (K-12)', pct:17},
-      {label:'ð Colleges & Unis', pct:6},{label:'ð¤ Social Services', pct:9},
-      {label:'ð Transportation', pct:5},{label:'ð³ Debt Interest', pct:7},
-      {label:'âï¸ Justice', pct:4},{label:'ð¦ Other', pct:14}
-    ], '#C0392B');
-  }
-  if (level === 'federal') {
-    new Chart(document.getElementById('canada-revenue'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Personal Income Tax','Corporate Tax','GST','EI Premiums','Other Tax','Non-Tax Revenue'],
-        datasets: [{ data: [47,18,11,6,7,11], backgroundColor: COLORS.slice(0,6), borderWidth: 2, borderColor: '#fff' }]
-      },
-      options: chartOpts('Revenue Sources')
-    });
-    new Chart(document.getElementById('canada-spending'), {
-      type: 'bar',
-      data: {
-        labels: ['Transfers to People','Transfers to Gov\'ts','Operating','Defence','Debt Charges','Other'],
-        datasets: [{ label: '% of Budget', data: [25,18,23,8,10,16], backgroundColor: COLORS.slice(0,6), borderRadius: 6 }]
-      },
-      options: barOpts('Spending Breakdown')
-    });
-    buildDollarBars('canada-dollar', [
-      {label:'ð¨âð©âð§ Transfers to People', pct:25},{label:'ðï¸ Transfers to Gov\'ts', pct:18},
-      {label:'âï¸ Running the Government', pct:23},{label:'ðª Defence', pct:8},
-      {label:'ð³ Debt Charges', pct:10},{label:'ð¦ Other', pct:16}
-    ], '#D52B1E');
-  }
-}
-
-function chartOpts(titleText) {
-  return {
-    responsive: true,
-    plugins: {
-      legend: { position: 'bottom', labels: { boxWidth: 12, padding: 8, font: { size: 11 } } },
-      title: { display: false },
-      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } }
-    }
-  };
-}
-function barOpts(titleText) {
-  return {
-    responsive: true, indexAxis: 'y',
-    plugins: {
-      legend: { display: false },
-      tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}% of budget` } }
-    },
-    scales: {
-      x: { beginAtZero: true, max: 45, ticks: { callback: v => v + '%' }, grid: { color: '#eee' } },
-      y: { grid: { display: false }, ticks: { font: { size: 11 } } }
-    }
-  };
-}
-
-// ââ QUIZ ââ
-const quizData = [
-  { q: '1. Which level of government pays for your school? ð«', opts: ['Federal','Ontario (Provincial)','Municipal'], ans: 1,
-    explain: 'Ontario pays for K-12 education â that\'s 17% of the provincial budget!' },
-  { q: '2. What is the biggest source of federal revenue? ðµ', opts: ['GST','Corporate Tax','Personal Income Tax'], ans: 2,
-    explain: 'Personal income tax makes up 47% of federal revenue â almost half!' },
-  { q: '3. Which level of government runs the police in Halton? ð®', opts: ['Federal','Provincial','Municipal / Regional'], ans: 2,
-    explain: 'Halton Regional Police is funded by the municipal/regional government â 16% of the budget.' },
-  { q: '4. What does OHIP stand for, and who pays for it? ð¥', opts: ['Ontario Health Insurance Plan â Provincial','Ontario Hospital Insurance Plan â Federal','Ontario Health Insurance Plan â Municipal'], ans: 0,
-    explain: 'OHIP = Ontario Health Insurance Plan, paid by the provincial government. Health care is 38% of Ontario\'s spending!' },
-  { q: '5. Where does GST money go? ð§¾', opts: ['Your city','Ontario','The federal government'], ans: 2,
-    explain: 'GST (Goods and Services Tax) goes to the federal government. HST\'s provincial portion goes to Ontario.' }
-];
+let quizScore = 0;
 let quizAnswered = 0;
-let quizCorrect = 0;
 
 function buildQuiz() {
-  const container = document.getElementById('quiz-container');
-  quizData.forEach((item, qi) => {
-    const div = document.createElement('div');
-    div.className = 'quiz-q';
-    div.innerHTML = `<p>${item.q}</p><div class="quiz-options">${
-      item.opts.map((o, oi) =>
-        `<button class="quiz-opt" data-q="${qi}" data-o="${oi}" onclick="checkAnswer(this,${qi},${oi})">${o}</button>`
-      ).join('')
-    }</div><div class="quiz-feedback" id="fb-${qi}"></div>`;
-    container.appendChild(div);
+  const area = document.getElementById('quizArea');
+  quizQuestions.forEach((q, qi) => {
+    let optsHTML = q.opts.map((o, oi) =>
+      `<span class="quiz-opt" onclick="checkAnswer(${qi},${oi})" id="q${qi}o${oi}">${o}</span>`
+    ).join('');
+    area.innerHTML += `
+      <div class="quiz-q" id="quiz-q-${qi}">
+        <p>${q.q}</p>
+        <div class="quiz-options">${optsHTML}</div>
+        <div class="quiz-feedback" id="fb-${qi}"></div>
+      </div>`;
   });
 }
-function checkAnswer(btn, qi, oi) {
-  if (btn.closest('.quiz-q').dataset.done) return;
-  btn.closest('.quiz-q').dataset.done = '1';
-  quizAnswered++;
-  const correct = quizData[qi].ans === oi;
-  if (correct) quizCorrect++;
-  btn.classList.add(correct ? 'correct' : 'wrong');
-  if (!correct) {
-    btn.closest('.quiz-options').querySelector(`[data-o="${quizData[qi].ans}"]`).classList.add('correct');
+
+function checkAnswer(qi, oi) {
+  const q = quizQuestions[qi];
+  const fb = document.getElementById('fb-' + qi);
+  q.opts.forEach((_, i) => {
+    const el = document.getElementById('q' + qi + 'o' + i);
+    el.classList.add('disabled');
+    if (i === q.correct) el.classList.add('correct');
+    else if (i === oi) el.classList.add('wrong');
+  });
+  if (oi === q.correct) {
+    fb.innerHTML = '✅ Correct! ' + q.explain;
+    fb.style.color = '#2E7D32';
+    quizScore++;
+  } else {
+    fb.innerHTML = '❌ Not quite! ' + q.explain;
+    fb.style.color = '#C62828';
   }
-  document.getElementById('fb-' + qi).innerHTML =
-    (correct ? 'â ' : 'â ') + quizData[qi].explain;
-  if (quizAnswered === quizData.length) {
-    const scoreEl = document.getElementById('quiz-score');
+  quizAnswered++;
+  if (quizAnswered === quizQuestions.length) {
+    const scoreEl = document.getElementById('quizScore');
     scoreEl.style.display = 'block';
-    const pct = Math.round(quizCorrect / quizData.length * 100);
-    const emoji = pct === 100 ? 'ð' : pct >= 60 ? 'ð' : 'ð';
-    scoreEl.textContent = `${emoji} You got ${quizCorrect}/${quizData.length} (${pct}%) â ${pct === 100 ? 'Perfect score! You\'re a budget genius!' : pct >= 60 ? 'Great job! You know your stuff!' : 'Keep learning â you\'ll get there!'}`;
+    const emoji = quizScore === 5 ? '🌟 Perfect!' : quizScore >= 3 ? '👏 Great job!' : '📚 Keep learning!';
+    scoreEl.innerHTML = `${emoji} You got <span style="color:var(--red)">${quizScore} / 5</span> correct!`;
   }
 }
 
-// ââ INIT ââ
-document.addEventListener('DOMContentLoaded', () => {
-  buildCharts('municipal');
-  chartsBuilt.municipal = true;
-  initCounters();
-  buildQuiz();
-});
+buildQuiz();
 </script>
 </body>
 </html>
